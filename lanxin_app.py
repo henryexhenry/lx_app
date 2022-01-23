@@ -12,23 +12,43 @@ username = credential.get("username")
 password = credential.get("password")
 base_url = credential.get("base_url")
 
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
 
 # export/营期名称/导师名称/课程名称
 @app.route("/export/<camp_name>/<coach_name>/<course_name>", methods=["GET"])
 @app.route("/export/<camp_name>/<coach_name>/", defaults={"course_name": None}, methods=["GET"])
 def export_works_csv(camp_name, coach_name, course_name):
-    filename = "students.csv"
     try:
         lx_api = LanXin_API(username, password, base_url)
         lx_service = LanXin_service(api=lx_api)
-        lx_service.flow_export_student_work(camp_name=camp_name, coach_name=coach_name, course_name=course_name)
+        lx_service.flow_export_student_work(camp_name=camp_name, coach_name=coach_name, course_name=course_name,
+                                            is_pick=True)
         dir = BASE_PATH
-        return send_from_directory(dir, filename, as_attachment=True)
+        return send_from_directory(dir, "students.csv", as_attachment=True)
     except Exception as e:
         return f"【有错误！快截图发 hy 看看】: {e}"
+
+
+# count/营期名称/导师名称
+@app.route("/count/<camp_name>/<coach_name>/<course_name>", methods=["GET"])
+@app.route("/count/<camp_name>/<coach_name>/", defaults={"course_name": None}, methods=["GET"])
+def export_count_works_csv(camp_name, coach_name, course_name):
+    try:
+        lx_api = LanXin_API(username, password, base_url)
+        lx_service = LanXin_service(api=lx_api)
+        lx_service.flow_count_first_comment_work(camp_name=camp_name, coach_name=coach_name, course_name=course_name)
+        dir = BASE_PATH
+        return send_from_directory(dir, "count_first_comment_work.csv", as_attachment=True)
+    except Exception as e:
+        return f"【有错误！快截图发 hy 看看】: {e}"
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=False)
 
 
 if __name__ == "__main__":
