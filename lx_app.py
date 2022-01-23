@@ -28,8 +28,9 @@ def export_works_csv(camp_name, coach_name, course_name):
         dir = BASE_PATH
         return send_from_directory(dir, filename, as_attachment=True)
     except Exception as e:
+        print(e)
         return f"【有错误！快截图发 hy 看看】: {e}"
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", debug=True)

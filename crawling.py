@@ -18,7 +18,9 @@ class LanXin_API:
     def get_token(self):
         url = "jwt/"
         data = {"username": self.username, "password": self.password}
+        print(f"==>  Connecting to {self.base_url+url} {data} ")
         res = requests.post(url=''.join([self.base_url, url]), json=data, verify=False)
+        print(f"<==  RES={res.text}")
         res = json.loads(res.text)
         return res.get("token")
 
@@ -31,7 +33,9 @@ class LanXin_API:
             "period_id": camp_id,
             "limit": limit
         }
+        print(f"==>  URL={''.join([self.base_url, url])} HEADERS={self.headers} PARMAS={data}")
         res = requests.get(url=''.join([self.base_url, url]), headers=self.headers, params=data)
+        print(f"<==  RES={res.text}")
         res = json.loads(res.text)
         return res.get("results")
 
@@ -40,7 +44,9 @@ class LanXin_API:
         获取营期信息
         """
         url = f"crm/v1/camps/?limit={limit}"
+        print(f"==>  URL={''.join([self.base_url, url])} HEADERS={self.headers}")
         res = requests.get(url=''.join([self.base_url, url]), headers=self.headers)
+        print(f"<==  RES={res.text}")
         res = json.loads(res.text)
         camp_list = res.get("results")
         return camp_list
@@ -59,7 +65,10 @@ class LanXin_API:
             "page": page,
             "limit": limit
         }
+        
+        print(f"==>  URL={''.join([self.base_url, url])} HEADERS={self.headers} PARMAS={data}")
         res = requests.get(url=''.join([self.base_url, url]), headers=self.headers, params=data)
+        print(f"<==  RES={res.text}")
         res = json.loads(res.text)
         return res
         
